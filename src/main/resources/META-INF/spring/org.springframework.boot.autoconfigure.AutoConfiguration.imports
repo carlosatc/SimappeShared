@@ -1,0 +1,12 @@
+# ============================================================
+# SimappeShared - Spring Boot AutoConfiguration Registry
+# ============================================================
+# Clientes web compartidos con auto-configuracion.
+# Cada linea es un FQN de clase @AutoConfiguration.
+#
+# Activacion por defecto: simappe.ai.enabled=true
+# Desactivar: simappe.ai.enabled=false
+# ============================================================
+
+# AI Client (Google Gemini via SimappeAdmin)
+com.catcsoft.simappe.shared.ai.config.AiClientAutoConfiguration
