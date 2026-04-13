@@ -19,14 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Auto-configuration for AiClient.
  *
- * Activation: simappe.ai.enabled=true (default)
- *
  * Properties:
- *   simappe.ai.admin-url=http://simappe-admin  (base URL of SimappeAdmin)
+ *   simappe.ai.gateway-url=http://simappe-client     (primary — AI Gateway in SimappeClient)
+ *   simappe.ai.fallback-url=http://simappe-admin      (fallback — old API in SimappeAdmin)
+ *   simappe.ai.fallback-enabled=true                   (enable/disable fallback)
  *   simappe.ai.connect-timeout=5000
  *   simappe.ai.read-timeout=60000
- *
- * Usage: Just add SimappeShared as dependency. AiClient bean is auto-created.
  */
 @Slf4j
 @AutoConfiguration
@@ -38,14 +36,19 @@ public class AiClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AiClient aiClient(AiClientProperties properties) {
-        log.info("[SimappeShared] Creating AiClient - adminUrl: {}, connectTimeout: {}ms, readTimeout: {}ms",
-                properties.getAdminUrl(), properties.getConnectTimeout(), properties.getReadTimeout());
+        log.info("[SimappeShared] Creating AiClient - gatewayUrl: {}, fallbackUrl: {}, fallbackEnabled: {}",
+                properties.getGatewayUrl(), properties.getFallbackUrl(), properties.isFallbackEnabled());
 
+        RestTemplate restTemplate = createRestTemplate(properties);
+
+        String fallbackUrl = properties.isFallbackEnabled() ? properties.getFallbackUrl() : null;
+        return new AiClient(restTemplate, properties.getGatewayUrl(), fallbackUrl);
+    }
+
+    private RestTemplate createRestTemplate(AiClientProperties properties) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(properties.getConnectTimeout());
         factory.setReadTimeout(properties.getReadTimeout());
-
-        RestTemplate restTemplate = new RestTemplate(factory);
-        return new AiClient(restTemplate, properties.getAdminUrl());
+        return new RestTemplate(factory);
     }
 }
