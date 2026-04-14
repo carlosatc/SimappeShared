@@ -180,12 +180,33 @@ public class AiClient {
 
     // ── Helpers ─────────────────────────────────────────
 
+    @SuppressWarnings("unchecked")
     private AiResponseDto postForAiResponse(String url, AiRequestDto request, String bearerToken) {
         HttpHeaders headers = jsonHeaders();
         if (bearerToken != null) headers.setBearerAuth(bearerToken);
         HttpEntity<AiRequestDto> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<AiResponseDto> response = restTemplate.postForEntity(url, entity, AiResponseDto.class);
-        return response.getBody();
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
+        Map<String, Object> body = response.getBody();
+        if (body == null) return new AiResponseDto();
+
+        // Unwrap SuccessResponse: {response: {content: {text, provider, ...}}}
+        Map<String, Object> content = body;
+        Object responseWrapper = body.get("response");
+        if (responseWrapper instanceof Map) {
+            Object innerContent = ((Map<String, Object>) responseWrapper).get("content");
+            if (innerContent instanceof Map) {
+                content = (Map<String, Object>) innerContent;
+            }
+        }
+
+        return AiResponseDto.builder()
+                .text(content.get("text") != null ? content.get("text").toString() : null)
+                .provider(content.get("provider") != null ? content.get("provider").toString() : null)
+                .model(content.get("model") != null ? content.get("model").toString() : null)
+                .tokensUsed(content.get("tokensUsed") instanceof Number n ? n.intValue() : null)
+                .monthlyUsage(content.get("monthlyUsage") instanceof Number n ? n.intValue() : null)
+                .monthlyLimit(content.get("monthlyLimit") instanceof Number n ? n.intValue() : null)
+                .build();
     }
 
     private HttpHeaders jsonHeaders() {
