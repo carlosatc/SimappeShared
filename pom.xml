@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.catcsoft.simappe</groupId>
 	<artifactId>SimappeShared</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>SimappeShared</name>
 	<description>
 		SimappeShared - Clientes Web y Utilidades Compartidas para Microservicios Simappe
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>
 			<artifactId>SimappeModel</artifactId>
-			<version>3.1.1</version>
+			<version>3.2.0</version>
 		</dependency>
 
 		<!-- Test -->
