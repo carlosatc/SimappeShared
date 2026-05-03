@@ -24,6 +24,7 @@
 
 	<properties>
 		<java.version>25</java.version>
+		<simappe-model.version>3.3.0</simappe-model.version>
 	</properties>
 
 	<dependencies>
@@ -58,7 +59,7 @@
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>
 			<artifactId>SimappeModel</artifactId>
-			<version>3.2.0</version>
+			<version>${simappe-model.version}</version>
 		</dependency>
 
 		<!-- Test -->
