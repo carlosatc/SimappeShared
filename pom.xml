@@ -109,6 +109,7 @@
 
 	<!-- Perfiles de distribucion -->
 	<profiles>
+		<!-- Perfil para Repsy (repositorio propio) - Activo por defecto -->
 		<profile>
 			<id>repsy</id>
 			<activation>
@@ -120,6 +121,23 @@
 					<name>Repositorio Maven Privado en Repsy</name>
 					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
 				</repository>
+			</distributionManagement>
+		</profile>
+
+		<!-- Perfil para Nexus Centrica (soporte de licencia) - Activar con: mvn deploy -P centrica -->
+		<profile>
+			<id>centrica</id>
+			<distributionManagement>
+				<repository>
+					<id>nexus-centrica</id>
+					<name>Nexus Centrica Releases</name>
+					<url>https://nexus.centricasoluciones.com/repository/centrica/</url>
+				</repository>
+				<snapshotRepository>
+					<id>nexus-centrica</id>
+					<name>Nexus Centrica Snapshots</name>
+					<url>https://nexus.centricasoluciones.com/repository/centrica/</url>
+				</snapshotRepository>
 			</distributionManagement>
 		</profile>
 	</profiles>
