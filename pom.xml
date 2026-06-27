@@ -101,7 +101,7 @@
 	<!-- Repositorio para descargar dependencias desde Repsy -->
 	<repositories>
 		<repository>
-			<id>repsy</id>
+			<id>repsy-catc</id>
 			<name>Repositorio Maven Privado en Repsy</name>
 			<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
 		</repository>
@@ -117,7 +117,7 @@
 			</activation>
 			<distributionManagement>
 				<repository>
-					<id>repsy</id>
+					<id>repsy-catc</id>
 					<name>Repositorio Maven Privado en Repsy</name>
 					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
 				</repository>
