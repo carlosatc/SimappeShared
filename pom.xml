@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.catcsoft.simappe</groupId>
 	<artifactId>SimappeShared</artifactId>
-	<version>1.0.4</version>
+	<version>1.1.0</version>
 	<name>SimappeShared</name>
 	<description>
 		SimappeShared - Clientes Web y Utilidades Compartidas para Microservicios Simappe
@@ -24,7 +24,7 @@
 
 	<properties>
 		<java.version>25</java.version>
-		<simappe-model.version>3.3.2</simappe-model.version>
+		<simappe-model.version>3.4.0</simappe-model.version>
 	</properties>
 
 	<dependencies>
@@ -55,6 +55,18 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- WebFlux: WebClient + Mono para los proxies @HttpExchange -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<!-- SimappeCommons (SuccessResponse + tipos de query; provided: el consumidor ya la trae) -->
+		<dependency>
+			<groupId>com.catcsoft.simappe</groupId>
+			<artifactId>SimappeCommons</artifactId>
+			<version>4.17.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- SimappeModel (DTOs) -->
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>

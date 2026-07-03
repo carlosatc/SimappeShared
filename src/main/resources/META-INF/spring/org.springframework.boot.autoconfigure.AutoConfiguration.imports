@@ -10,3 +10,6 @@
 
 # AI Client (Google Gemini via SimappeAdmin)
 com.catcsoft.simappe.shared.ai.config.AiClientAutoConfiguration
+
+# Tenant Clients (self-service del cliente via SimappeAdmin /tenant/**)
+com.catcsoft.simappe.shared.tenant.config.TenantClientsAutoConfiguration
