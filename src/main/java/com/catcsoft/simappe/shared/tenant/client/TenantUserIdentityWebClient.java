@@ -38,7 +38,7 @@ import reactor.core.publisher.Mono;
  * @since 1.1.0
  * @see TenantCustomerRoleWebClient
  */
-@HttpExchange("/api/v1/tenant/user-identity")
+@HttpExchange("simappe-admin/api/v1/tenant/user-identity")
 public interface TenantUserIdentityWebClient {
 
     /**
