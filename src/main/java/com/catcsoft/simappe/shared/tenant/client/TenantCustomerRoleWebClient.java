@@ -21,6 +21,8 @@ import com.catcsoft.simappe.commons.api.v1.core.query.SimappeRequestQuery;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantCustomerRoleDto;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleActionDto;
+import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleOptionDto;
+import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleTypeDto;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantRoleOptionResponse;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantRoleTypeResponse;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantCustomerRoleResponse;
@@ -82,6 +84,54 @@ public interface TenantCustomerRoleWebClient {
     Mono<SuccessResponse<TenantCustomerRoleResponse>> getRecord(
             @RequestParam("id") Long id,
             @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Página estándar (DTO, endpoint {@code /page}) de los tipos base
+     * disponibles del catálogo.
+     *
+     * @param query         criterios de paginación y búsqueda
+     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @return página DTO de tipos base disponibles
+     */
+    @PostExchange("/role-types/page")
+    Mono<SuccessResponse<PageDto<TenantRoleTypeDto>>> roleTypesPageDto(
+            @RequestBody SimappeRequestQuery query,
+            @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Página estándar (DTO, endpoint {@code /page}) de las opciones asignadas
+     * al rol, acotada al contexto de aplicación dado.
+     *
+     * @param id              identificador del rol
+     * @param applicationCode código de la aplicación del contexto (opcional)
+     * @param query           criterios de paginación y búsqueda
+     * @param authorization   header {@code Bearer <jwt>} del admin del tenant
+     * @return página DTO de opciones asignadas
+     */
+    @PostExchange("/{id}/options/page")
+    Mono<SuccessResponse<PageDto<TenantRoleOptionDto>>> optionsPageDto(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "applicationCode", required = false) String applicationCode,
+            @RequestBody SimappeRequestQuery query,
+            @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Página estándar (DTO, endpoint {@code /page}) de las opciones
+     * disponibles para el rol, acotada al contexto de aplicación dado.
+     *
+     * @param id              identificador del rol
+     * @param applicationCode código de la aplicación del contexto (opcional)
+     * @param query           criterios de paginación y búsqueda
+     * @param authorization   header {@code Bearer <jwt>} del admin del tenant
+     * @return página DTO de opciones disponibles
+     */
+    @PostExchange("/{id}/available-options/page")
+    Mono<SuccessResponse<PageDto<TenantRoleOptionDto>>> availableOptionsPageDto(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "applicationCode", required = false) String applicationCode,
+            @RequestBody SimappeRequestQuery query,
+            @RequestHeader("Authorization") String authorization);
+
 
     /**
      * Página los tipos base del catálogo (BUSINESS activos) para el
