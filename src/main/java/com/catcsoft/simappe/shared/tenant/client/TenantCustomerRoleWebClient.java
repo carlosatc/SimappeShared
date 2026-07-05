@@ -160,44 +160,54 @@ public interface TenantCustomerRoleWebClient {
             @RequestHeader("Authorization") String authorization);
 
     /**
-     * Página las opciones (recursos) asignadas al rol.
+     * Página las opciones (recursos) asignadas al rol, acotadas al contexto
+     * de aplicación dado (opcional: vacío = sin acotar).
      *
-     * @param id            identificador del rol
-     * @param query         criterios de paginación
-     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @param id              identificador del rol
+     * @param applicationCode código de la aplicación del contexto (opcional)
+     * @param query           criterios de paginación
+     * @param authorization   header {@code Bearer <jwt>} del admin del tenant
      * @return página de opciones asignadas con estado de relación
      */
     @PostExchange("/{id}/options/page")
     Mono<SuccessResponse<PageResponse<TenantRoleOptionDto>>> optionsPage(
             @PathVariable("id") Long id,
+            @RequestParam(value = "applicationCode", required = false) String applicationCode,
             @RequestBody SimappeRequestQuery query,
             @RequestHeader("Authorization") String authorization);
 
     /**
-     * Página las opciones compradas aún no asignadas al rol.
+     * Página las opciones compradas aún no asignadas al rol, acotadas al
+     * contexto de aplicación dado (opcional: vacío = sin acotar).
      *
-     * @param id            identificador del rol
-     * @param query         criterios de paginación
-     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @param id              identificador del rol
+     * @param applicationCode código de la aplicación del contexto (opcional)
+     * @param query           criterios de paginación
+     * @param authorization   header {@code Bearer <jwt>} del admin del tenant
      * @return página de opciones disponibles
      */
     @PostExchange("/{id}/available-options/page")
     Mono<SuccessResponse<PageResponse<TenantRoleOptionDto>>> availableOptionsPage(
             @PathVariable("id") Long id,
+            @RequestParam(value = "applicationCode", required = false) String applicationCode,
             @RequestBody SimappeRequestQuery query,
             @RequestHeader("Authorization") String authorization);
 
     /**
-     * Reemplaza por delta el set de opciones del rol.
+     * Reemplaza por delta el set de opciones del rol DENTRO del contexto de
+     * aplicación dado: las relaciones de otras aplicaciones no participan
+     * del delta (opcional: vacío = alcance total).
      *
-     * @param id            identificador del rol
-     * @param optionIds     set objetivo de opciones
-     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @param id              identificador del rol
+     * @param applicationCode código de la aplicación del contexto (opcional)
+     * @param optionIds       set objetivo de opciones del contexto
+     * @param authorization   header {@code Bearer <jwt>} del admin del tenant
      * @return señal de completitud
      */
     @PutExchange("/{id}/options")
     Mono<SuccessResponse<Void>> replaceOptions(
             @PathVariable("id") Long id,
+            @RequestParam(value = "applicationCode", required = false) String applicationCode,
             @RequestBody List<Long> optionIds,
             @RequestHeader("Authorization") String authorization);
 
