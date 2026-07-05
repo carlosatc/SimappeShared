@@ -21,8 +21,8 @@ import com.catcsoft.simappe.commons.api.v1.core.query.SimappeRequestQuery;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantCustomerRoleDto;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleActionDto;
-import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleOptionDto;
-import com.catcsoft.simappe.model.admin.dto.tenant.TenantRoleTypeDto;
+import com.catcsoft.simappe.model.admin.record.tenant.TenantRoleOptionResponse;
+import com.catcsoft.simappe.model.admin.record.tenant.TenantRoleTypeResponse;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantCustomerRoleResponse;
 
 import reactor.core.publisher.Mono;
@@ -91,8 +91,8 @@ public interface TenantCustomerRoleWebClient {
      * @param authorization header {@code Bearer <jwt>} del admin del tenant
      * @return página de tipos base
      */
-    @PostExchange("/role-types/page")
-    Mono<SuccessResponse<PageDto<TenantRoleTypeDto>>> roleTypesPage(
+    @PostExchange("/role-types/page-response")
+    Mono<SuccessResponse<PageResponse<TenantRoleTypeResponse>>> roleTypesPage(
             @RequestBody SimappeRequestQuery query,
             @RequestHeader("Authorization") String authorization);
 
@@ -169,8 +169,8 @@ public interface TenantCustomerRoleWebClient {
      * @param authorization   header {@code Bearer <jwt>} del admin del tenant
      * @return página de opciones asignadas con estado de relación
      */
-    @PostExchange("/{id}/options/page")
-    Mono<SuccessResponse<PageResponse<TenantRoleOptionDto>>> optionsPage(
+    @PostExchange("/{id}/options/page-response")
+    Mono<SuccessResponse<PageResponse<TenantRoleOptionResponse>>> optionsPage(
             @PathVariable("id") Long id,
             @RequestParam(value = "applicationCode", required = false) String applicationCode,
             @RequestBody SimappeRequestQuery query,
@@ -186,8 +186,8 @@ public interface TenantCustomerRoleWebClient {
      * @param authorization   header {@code Bearer <jwt>} del admin del tenant
      * @return página de opciones disponibles
      */
-    @PostExchange("/{id}/available-options/page")
-    Mono<SuccessResponse<PageResponse<TenantRoleOptionDto>>> availableOptionsPage(
+    @PostExchange("/{id}/available-options/page-response")
+    Mono<SuccessResponse<PageResponse<TenantRoleOptionResponse>>> availableOptionsPage(
             @PathVariable("id") Long id,
             @RequestParam(value = "applicationCode", required = false) String applicationCode,
             @RequestBody SimappeRequestQuery query,
