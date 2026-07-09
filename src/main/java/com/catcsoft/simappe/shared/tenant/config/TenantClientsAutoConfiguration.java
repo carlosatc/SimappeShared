@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+import com.catcsoft.simappe.shared.notification.client.EmailNotificationWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityWebClient;
 
@@ -71,6 +72,24 @@ public class TenantClientsAutoConfiguration {
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
         log.info("[SimappeShared] Creando TenantCustomerRoleWebClient con baseUrl: {}", baseUrl);
         return proxy(webClientBuilder, baseUrl, TenantCustomerRoleWebClient.class);
+    }
+
+    /**
+     * Crea el WebClient de notificaciones por correo de SimappeAdmin. Comparte
+     * la misma base ({@code simappe.admin.url}) y flag de activación que los
+     * clientes tenant, ya que todos apuntan a SimappeAdmin.
+     *
+     * @param webClientBuilder builder de WebClient del contexto
+     * @param baseUrl          URL base de SimappeAdmin (sin sufijo)
+     * @return el proxy del cliente de correo
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    EmailNotificationWebClient emailNotificationWebClient(
+            WebClient.Builder webClientBuilder,
+            @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
+        log.info("[SimappeShared] Creando EmailNotificationWebClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, EmailNotificationWebClient.class);
     }
 
     /**
