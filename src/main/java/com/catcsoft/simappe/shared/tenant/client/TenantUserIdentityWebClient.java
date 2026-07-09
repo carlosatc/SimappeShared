@@ -18,6 +18,7 @@ import com.catcsoft.simappe.commons.api.v1.core.query.PageResponse;
 import com.catcsoft.simappe.commons.api.v1.core.query.SimappeRequestQuery;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantUserIdentityDto;
+import com.catcsoft.simappe.shared.tenant.dto.ServiceActivationRequest;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantUserIdentityResponse;
 
 import reactor.core.publisher.Mono;
@@ -89,6 +90,38 @@ public interface TenantUserIdentityWebClient {
     Mono<SuccessResponse<TenantUserIdentityDto>> create(
             @RequestBody TenantUserIdentityDto dto,
             @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Crea una identidad para el customer del token en estado {@code INACTIVE} y
+     * SIN contraseña, para el flujo de alta con activación posterior. La
+     * contraseña la define el propio usuario en la activación vía
+     * {@code define-password}. El campo {@code password} del dto se ignora.
+     *
+     * @param dto           identidad a crear (username, email, roles)
+     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @return la identidad creada en estado INACTIVE
+     */
+    @PostExchange("/create-inactive")
+    Mono<SuccessResponse<TenantUserIdentityDto>> createInactive(
+            @RequestBody TenantUserIdentityDto dto,
+            @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Activación por SERVICIO (flujo público de activación, SIN JWT de usuario). Autenticada por un
+     * secreto de servicio compartido en la cabecera {@code X-Nebula-Service-Key}: fija la contraseña y
+     * activa la identidad INACTIVE. La invoca un servicio de confianza (nebula-masters) tras validar su
+     * token de un solo uso.
+     *
+     * @param request    datos de activación ({@code username}, {@code customerId}, {@code password});
+     *                   DTO propio para que el {@code password} SÍ se serialice (el de
+     *                   {@code TenantUserIdentityDto} es WRITE_ONLY y no viajaría)
+     * @param serviceKey secreto de servicio ({@code X-Nebula-Service-Key})
+     * @return señal de completitud
+     */
+    @PutExchange("/activate-by-service")
+    Mono<Void> activateByService(
+            @RequestBody ServiceActivationRequest request,
+            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
 
     /**
      * Actualiza una identidad del customer del token.
