@@ -335,6 +335,24 @@ public interface TenantCustomerRoleWebClient {
             @RequestHeader("Authorization") String authorization);
 
     /**
+     * Página (patrón page-response) las acciones efectivas del rol para un
+     * recurso. Equivale a {@link #optionActionsPage} sobre la ruta
+     * {@code .../actions/page-response}, que es la que consume el front.
+     *
+     * @param id            identificador del rol
+     * @param optionId      identificador de la opción (recurso)
+     * @param query         criterios de paginación
+     * @param authorization header {@code Bearer <jwt>} del admin del tenant
+     * @return página de acciones efectivas
+     */
+    @PostExchange("/{id}/options/{optionId}/actions/page-response")
+    Mono<SuccessResponse<PageResponse<TenantRoleActionDto>>> optionActionsPageResponse(
+            @PathVariable("id") Long id,
+            @PathVariable("optionId") Long optionId,
+            @RequestBody SimappeRequestQuery query,
+            @RequestHeader("Authorization") String authorization);
+
+    /**
      * Guarda el set deseado de acciones del rol para un recurso (solo se
      * persisten las diferencias contra el contexto general del rol).
      *
