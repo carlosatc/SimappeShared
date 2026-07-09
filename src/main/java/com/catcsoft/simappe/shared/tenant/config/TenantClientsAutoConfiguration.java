@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import com.catcsoft.simappe.shared.notification.client.EmailNotificationWebClient;
+import com.catcsoft.simappe.shared.registration.client.RegistrationWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityWebClient;
 
@@ -90,6 +91,24 @@ public class TenantClientsAutoConfiguration {
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
         log.info("[SimappeShared] Creando EmailNotificationWebClient con baseUrl: {}", baseUrl);
         return proxy(webClientBuilder, baseUrl, EmailNotificationWebClient.class);
+    }
+
+    /**
+     * Crea el WebClient del enlace de activación contra el servidor oauth2. Base
+     * distinta a los clientes de admin ({@code simappe.oauth2.url}) porque los
+     * endpoints seal/open viven en el servidor de autenticación.
+     *
+     * @param webClientBuilder builder de WebClient del contexto
+     * @param baseUrl          URL base de oauth2 (sin sufijo)
+     * @return el proxy del cliente de activación
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    RegistrationWebClient registrationWebClient(
+            WebClient.Builder webClientBuilder,
+            @Value("${simappe.oauth2.url:http://simappe-oauth2-server}") String baseUrl) {
+        log.info("[SimappeShared] Creando RegistrationWebClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, RegistrationWebClient.class);
     }
 
     /**
