@@ -19,6 +19,7 @@ import com.catcsoft.simappe.commons.api.v1.core.query.SimappeRequestQuery;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.tenant.TenantUserIdentityDto;
 import com.catcsoft.simappe.shared.tenant.dto.ServiceActivationRequest;
+import com.catcsoft.simappe.shared.tenant.dto.ServicePasswordResetRequest;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantUserIdentityResponse;
 
 import reactor.core.publisher.Mono;
@@ -121,6 +122,24 @@ public interface TenantUserIdentityWebClient {
     @PutExchange("/activate-by-service")
     Mono<Void> activateByService(
             @RequestBody ServiceActivationRequest request,
+            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+
+    /**
+     * Reinicio de contraseña por SERVICIO (flujo público "olvidé mi contraseña", SIN JWT de usuario).
+     * Autenticada por el secreto de servicio {@code X-Nebula-Service-Key}: fija una contraseña nueva en
+     * una identidad YA ACTIVE (a diferencia de {@code activate-by-service}, que exige INACTIVE),
+     * preservando el histórico. La invoca un servicio de confianza (nebula-masters) tras validar su
+     * token de un solo uso.
+     *
+     * @param request    datos del reinicio ({@code username}, {@code customerId}, {@code password});
+     *                   DTO propio para que el {@code password} SÍ se serialice (el de
+     *                   {@code TenantUserIdentityDto} es WRITE_ONLY y no viajaría)
+     * @param serviceKey secreto de servicio ({@code X-Nebula-Service-Key})
+     * @return señal de completitud
+     */
+    @PutExchange("/reset-password-by-service")
+    Mono<Void> resetPasswordByService(
+            @RequestBody ServicePasswordResetRequest request,
             @RequestHeader("X-Nebula-Service-Key") String serviceKey);
 
     /**
