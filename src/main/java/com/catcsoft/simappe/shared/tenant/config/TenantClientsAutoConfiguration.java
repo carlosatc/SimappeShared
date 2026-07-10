@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+import com.catcsoft.simappe.shared.identity.client.UserIdentityWebClient;
 import com.catcsoft.simappe.shared.notification.client.EmailNotificationWebClient;
 import com.catcsoft.simappe.shared.registration.client.RegistrationWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleWebClient;
@@ -109,6 +110,23 @@ public class TenantClientsAutoConfiguration {
             @Value("${simappe.oauth2.url:http://simappe-oauth2-server}") String baseUrl) {
         log.info("[SimappeShared] Creando RegistrationWebClient con baseUrl: {}", baseUrl);
         return proxy(webClientBuilder, baseUrl, RegistrationWebClient.class);
+    }
+
+    /**
+     * Crea el WebClient GLOBAL de identidades de usuario (resuelve por username/email sin tenant).
+     * Comparte la base ({@code simappe.admin.url}) con los clientes tenant porque apunta a SimappeAdmin.
+     *
+     * @param webClientBuilder builder de WebClient del contexto
+     * @param baseUrl          URL base de SimappeAdmin (sin sufijo)
+     * @return el proxy del cliente global de identidades
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    UserIdentityWebClient userIdentityWebClient(
+            WebClient.Builder webClientBuilder,
+            @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
+        log.info("[SimappeShared] Creando UserIdentityWebClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, UserIdentityWebClient.class);
     }
 
     /**
