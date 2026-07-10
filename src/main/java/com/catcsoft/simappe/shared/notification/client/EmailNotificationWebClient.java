@@ -47,4 +47,21 @@ public interface EmailNotificationWebClient {
             @RequestBody EmailNotificationDto notification,
             @RequestParam("async") boolean async,
             @RequestHeader("Authorization") String authorization);
+
+    /**
+     * Envío de correo por SERVICIO (flujo público sin JWT de usuario), autenticado por el secreto de
+     * servicio compartido {@code X-Nebula-Service-Key}. Para casos donde no hay sesión de la que tomar
+     * un JWT (p.ej. el "olvidé mi contraseña" de auto-servicio). El tenant/configuración de correo viaja
+     * en el propio {@link EmailNotificationDto} (su base de negocio), no en el token.
+     *
+     * @param notification contenido del correo (asunto, cuerpo, destinatarios, tenant en su base, etc.)
+     * @param async        si la entrega es asíncrona (recomendado: {@code true})
+     * @param serviceKey   secreto de servicio ({@code X-Nebula-Service-Key})
+     * @return señal de aceptación (cuerpo vacío)
+     */
+    @PostExchange("/send-by-service")
+    Mono<Void> sendByService(
+            @RequestBody EmailNotificationDto notification,
+            @RequestParam("async") boolean async,
+            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
 }
