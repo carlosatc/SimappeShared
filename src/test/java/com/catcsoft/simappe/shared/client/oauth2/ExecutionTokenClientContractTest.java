@@ -19,6 +19,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
 import com.catcsoft.simappe.model.admin.dto.security.UserSession;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import reactor.core.publisher.Mono;
 
@@ -49,7 +50,7 @@ class ExecutionTokenClientContractTest {
     private static final String URL_BASE = "/simappe-oauth2-server/api/v1/execution-token";
 
     /** Cabecera con la que el emisor reconoce al servicio que pide el token. */
-    private static final String CABECERA_SERVICIO = "X-Nebula-Service-Key";
+    private static final String CABECERA_SERVICIO = ServiceKeyHeader.DEFAULT_NAME;
 
     /**
      * Recupera el unico metodo {@code generate} de la interfaz indicada.

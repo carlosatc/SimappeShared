@@ -16,6 +16,7 @@ import org.springframework.web.service.annotation.PostExchange;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.security.SimappeToken;
 import com.catcsoft.simappe.model.admin.dto.security.UserSession;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 /**
  * Cliente HTTP <b>bloqueante</b> del token de ejecución
@@ -80,6 +81,6 @@ public interface ExecutionTokenBlockingClient {
      */
     @PostExchange("/generate")
     SuccessResponse<SimappeToken> generate(
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey,
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey,
             @RequestBody UserSession userSession);
 }

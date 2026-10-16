@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Busca el nombre de quien lanza la tarea en el usuario de Simappe, con el token de la peticion (mismo
- * camino que los avisos de accounting-core). Una falla no impide crear la tarea: se registra y se sigue
+ * camino que los demás avisos). Una falla no impide crear la tarea: se registra y se sigue
  * sin nombre.
  *
  * @author Carlos Torres

@@ -22,8 +22,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
-import com.catcsoft.simappe.shared.client.accounting.TipoDocumentoBlockingClient;
-import com.catcsoft.simappe.shared.client.accounting.TipoDocumentoReactiveClient;
 import com.catcsoft.simappe.shared.client.admin.RolClienteBlockingClient;
 import com.catcsoft.simappe.shared.client.admin.RolClienteReactiveClient;
 import com.catcsoft.simappe.shared.client.configurations.UsuarioSimappeBlockingClient;
@@ -32,6 +30,8 @@ import com.catcsoft.simappe.shared.client.oauth2.ExecutionTokenBlockingClient;
 import com.catcsoft.simappe.shared.client.oauth2.ExecutionTokenReactiveClient;
 import com.catcsoft.simappe.shared.client.tareas.ControlTareasBlockingClient;
 import com.catcsoft.simappe.shared.client.tareas.ControlTareasReactiveClient;
+
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +50,8 @@ import lombok.extern.slf4j.Slf4j;
  *
  * <p>Config (config-server): {@code simappe.shared.clients.base-url} (gateway, ej.
  * {@code http://simappe-gateway-server:8090}) y {@code simappe.shared.clients.environment} (header
- * {@code x-simappe-environment}, fijo por despliegue). El token de auth NO se configura aquí: se pasa
+ * {@code x-simappe-environment}, fijo por despliegue). La cabecera de la clave de servicio toma su nombre
+ * de {@code simappe.security.service-key-header} (default {@code X-Simappe-Service-Key}). El token de auth NO se configura aquí: se pasa
  * explícito por llamada ({@code Authorization: Bearer}).</p>
  *
  * @author Carlos Torres
@@ -72,6 +73,10 @@ public class SharedClientsAutoConfiguration {
     @Value("${simappe.shared.clients.environment:dev}")
     private String environment;
 
+    /** Nombre de la cabecera de la clave de servicio, por contexto (config-server). */
+    @Value(ServiceKeyHeader.VALUE_EXPRESSION)
+    private String serviceKeyHeader;
+
     /**
      * Crea un proxy {@code @HttpExchange} bloqueante (RestClient) sobre el gateway.
      *
@@ -85,6 +90,7 @@ public class SharedClientsAutoConfiguration {
         RestClient restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(ENV_HEADER, environment)
+                .requestInterceptor(ServiceKeyHeader.restClientInterceptor(serviceKeyHeader))
                 .build();
         return HttpServiceProxyFactory
                 .builderFor(RestClientAdapter.create(restClient))
@@ -105,6 +111,7 @@ public class SharedClientsAutoConfiguration {
         WebClient webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(ENV_HEADER, environment)
+                .filter(ServiceKeyHeader.webClientFilter(serviceKeyHeader))
                 .build();
         return HttpServiceProxyFactory
                 .builderFor(WebClientAdapter.create(webClient))
@@ -188,32 +195,6 @@ public class SharedClientsAutoConfiguration {
             havingValue = "true", matchIfMissing = true)
     UsuarioSimappeReactiveClient usuarioSimappeReactiveClient() {
         return reactiveProxy(UsuarioSimappeReactiveClient.class);
-    }
-
-    /**
-     * Bean del {@link TipoDocumentoBlockingClient} (RestClient). Maestro Tipo de Documento (simappe-accounting-core).
-     *
-     * @return el proxy bloqueante
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "simappe.shared.clients.blocking", name = "enabled",
-            havingValue = "true", matchIfMissing = true)
-    TipoDocumentoBlockingClient tipoDocumentoBlockingClient() {
-        return blockingProxy(TipoDocumentoBlockingClient.class);
-    }
-
-    /**
-     * Bean del {@link TipoDocumentoReactiveClient} (WebClient).
-     *
-     * @return el proxy reactivo
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "simappe.shared.clients.reactive", name = "enabled",
-            havingValue = "true", matchIfMissing = true)
-    TipoDocumentoReactiveClient tipoDocumentoReactiveClient() {
-        return reactiveProxy(TipoDocumentoReactiveClient.class);
     }
 
     /**

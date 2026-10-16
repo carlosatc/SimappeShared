@@ -13,14 +13,15 @@ import com.catcsoft.simappe.shared.registration.dto.RegistrationOpenRequest;
 import com.catcsoft.simappe.shared.registration.dto.RegistrationOpenResponse;
 import com.catcsoft.simappe.shared.registration.dto.RegistrationSealRequest;
 import com.catcsoft.simappe.shared.registration.dto.RegistrationSealResponse;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import reactor.core.publisher.Mono;
 
 /**
  * WebClient del enlace de activación de usuario contra el servidor oauth2
  * ({@code /api/v1/registration}). Consumido servicio-a-servicio por
- * nebula-masters; se autentica con la clave de servicio compartida
- * ({@code X-Nebula-Service-Key}).
+ * SimappeConfigurations; se autentica con la clave de servicio compartida
+ * (cabecera de clave de servicio, {@link ServiceKeyHeader}).
  *
  * <ul>
  * <li>{@code seal} — cifra el contexto de activación (alta de usuario).</li>
@@ -45,7 +46,7 @@ public interface RegistrationWebClient {
     @PostExchange("/seal")
     Mono<SuccessResponse<RegistrationSealResponse>> seal(
             @RequestBody RegistrationSealRequest request,
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey);
 
     /**
      * Descifra el blob del enlace y devuelve el JWT de registro con el contexto
@@ -58,5 +59,5 @@ public interface RegistrationWebClient {
     @PostExchange("/open")
     Mono<SuccessResponse<RegistrationOpenResponse>> open(
             @RequestBody RegistrationOpenRequest request,
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey);
 }

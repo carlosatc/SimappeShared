@@ -16,6 +16,7 @@ import org.springframework.web.service.annotation.PostExchange;
 import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.security.SimappeToken;
 import com.catcsoft.simappe.model.admin.dto.security.UserSession;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import reactor.core.publisher.Mono;
 
@@ -47,6 +48,6 @@ public interface ExecutionTokenReactiveClient {
      */
     @PostExchange("/generate")
     Mono<SuccessResponse<SimappeToken>> generate(
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey,
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey,
             @RequestBody UserSession userSession);
 }

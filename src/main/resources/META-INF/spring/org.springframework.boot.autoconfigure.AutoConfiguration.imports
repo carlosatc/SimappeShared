@@ -15,7 +15,7 @@ com.catcsoft.simappe.shared.ai.config.AiClientAutoConfiguration
 com.catcsoft.simappe.shared.tenant.config.TenantClientsAutoConfiguration
 
 # Clientes compartidos de configuraciones y tareas (usuario, token de ejecucion,
-# control de tareas, tipo de documento, roles del cliente) sobre el gateway.
+# control de tareas, roles del cliente) sobre el gateway.
 # Activacion: simappe.shared.clients.enabled=true (opt-in; default apagado)
 com.catcsoft.simappe.shared.client.config.SharedClientsAutoConfiguration
 
