@@ -21,6 +21,7 @@ import com.catcsoft.simappe.model.admin.dto.tenant.TenantUserIdentityDto;
 import com.catcsoft.simappe.shared.tenant.dto.ServiceActivationRequest;
 import com.catcsoft.simappe.shared.tenant.dto.ServicePasswordResetRequest;
 import com.catcsoft.simappe.model.admin.record.tenant.TenantUserIdentityResponse;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import reactor.core.publisher.Mono;
 
@@ -109,38 +110,38 @@ public interface TenantUserIdentityWebClient {
 
     /**
      * Activación por SERVICIO (flujo público de activación, SIN JWT de usuario). Autenticada por un
-     * secreto de servicio compartido en la cabecera {@code X-Nebula-Service-Key}: fija la contraseña y
-     * activa la identidad INACTIVE. La invoca un servicio de confianza (nebula-masters) tras validar su
+     * secreto de servicio compartido en la cabecera de clave de servicio ({@link ServiceKeyHeader}): fija la contraseña y
+     * activa la identidad INACTIVE. La invoca un servicio de confianza (SimappeConfigurations) tras validar su
      * token de un solo uso.
      *
      * @param request    datos de activación ({@code username}, {@code customerId}, {@code password});
      *                   DTO propio para que el {@code password} SÍ se serialice (el de
      *                   {@code TenantUserIdentityDto} es WRITE_ONLY y no viajaría)
-     * @param serviceKey secreto de servicio ({@code X-Nebula-Service-Key})
+     * @param serviceKey secreto de servicio (cabecera de clave de servicio, {@link ServiceKeyHeader})
      * @return señal de completitud
      */
     @PutExchange("/activate-by-service")
     Mono<Void> activateByService(
             @RequestBody ServiceActivationRequest request,
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey);
 
     /**
      * Reinicio de contraseña por SERVICIO (flujo público "olvidé mi contraseña", SIN JWT de usuario).
-     * Autenticada por el secreto de servicio {@code X-Nebula-Service-Key}: fija una contraseña nueva en
+     * Autenticada por el secreto de servicio en la cabecera de clave de servicio ({@link ServiceKeyHeader}): fija una contraseña nueva en
      * una identidad YA ACTIVE (a diferencia de {@code activate-by-service}, que exige INACTIVE),
-     * preservando el histórico. La invoca un servicio de confianza (nebula-masters) tras validar su
+     * preservando el histórico. La invoca un servicio de confianza (SimappeConfigurations) tras validar su
      * token de un solo uso.
      *
      * @param request    datos del reinicio ({@code username}, {@code customerId}, {@code password});
      *                   DTO propio para que el {@code password} SÍ se serialice (el de
      *                   {@code TenantUserIdentityDto} es WRITE_ONLY y no viajaría)
-     * @param serviceKey secreto de servicio ({@code X-Nebula-Service-Key})
+     * @param serviceKey secreto de servicio (cabecera de clave de servicio, {@link ServiceKeyHeader})
      * @return señal de completitud
      */
     @PutExchange("/reset-password-by-service")
     Mono<Void> resetPasswordByService(
             @RequestBody ServicePasswordResetRequest request,
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey);
 
     /**
      * Actualiza una identidad del customer del token.

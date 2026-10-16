@@ -10,6 +10,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
 import com.catcsoft.simappe.model.admin.notification.dto.EmailNotificationDto;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 
 import reactor.core.publisher.Mono;
 
@@ -50,18 +51,18 @@ public interface EmailNotificationWebClient {
 
     /**
      * Envío de correo por SERVICIO (flujo público sin JWT de usuario), autenticado por el secreto de
-     * servicio compartido {@code X-Nebula-Service-Key}. Para casos donde no hay sesión de la que tomar
+     * servicio compartido en la cabecera de clave de servicio ({@link ServiceKeyHeader}). Para casos donde no hay sesión de la que tomar
      * un JWT (p.ej. el "olvidé mi contraseña" de auto-servicio). El tenant/configuración de correo viaja
      * en el propio {@link EmailNotificationDto} (su base de negocio), no en el token.
      *
      * @param notification contenido del correo (asunto, cuerpo, destinatarios, tenant en su base, etc.)
      * @param async        si la entrega es asíncrona (recomendado: {@code true})
-     * @param serviceKey   secreto de servicio ({@code X-Nebula-Service-Key})
+     * @param serviceKey   secreto de servicio (cabecera de clave de servicio, {@link ServiceKeyHeader})
      * @return señal de aceptación (cuerpo vacío)
      */
     @PostExchange("/send-by-service")
     Mono<Void> sendByService(
             @RequestBody EmailNotificationDto notification,
             @RequestParam("async") boolean async,
-            @RequestHeader("X-Nebula-Service-Key") String serviceKey);
+            @RequestHeader(ServiceKeyHeader.DEFAULT_NAME) String serviceKey);
 }

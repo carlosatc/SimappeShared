@@ -16,6 +16,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import com.catcsoft.simappe.shared.identity.client.UserIdentityWebClient;
 import com.catcsoft.simappe.shared.notification.client.EmailNotificationWebClient;
 import com.catcsoft.simappe.shared.registration.client.RegistrationWebClient;
+import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
 import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleWebClient;
 import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityWebClient;
 
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * <pre>
  *   simappe.tenant.clients.enabled=true   (activa los beans; default false)
  *   simappe.admin.url=http://simappe-admin (base de SimappeAdmin, sin sufijo)
+ *   simappe.security.service-key-header=X-Simappe-Service-Key (cabecera de la clave de servicio)
  * </pre>
  *
  * @author Carlos Torres
@@ -43,6 +45,10 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnClass(WebClient.class)
 @ConditionalOnProperty(prefix = "simappe.tenant.clients", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class TenantClientsAutoConfiguration {
+
+    /** Nombre de la cabecera de la clave de servicio, por contexto (config-server). */
+    @Value(ServiceKeyHeader.VALUE_EXPRESSION)
+    private String serviceKeyHeader;
 
     /**
      * Crea el WebClient tenant de identidades de usuario.
@@ -139,7 +145,9 @@ public class TenantClientsAutoConfiguration {
      * @return el proxy creado
      */
     private <T> T proxy(WebClient.Builder webClientBuilder, String baseUrl, Class<T> clientType) {
-        WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
+        // Se clona el builder del contexto para no dejarle la base ni el filtro a otros clientes
+        WebClient webClient = webClientBuilder.clone().baseUrl(baseUrl)
+                .filter(ServiceKeyHeader.webClientFilter(serviceKeyHeader)).build();
         return HttpServiceProxyFactory
                 .builderFor(WebClientAdapter.create(webClient))
                 .build()
