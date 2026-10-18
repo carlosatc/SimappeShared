@@ -111,23 +111,39 @@
 		</plugins>
 	</build>
 
-	<!-- Repositorio para descargar dependencias desde Repsy -->
+	<!-- Repositorio para descargar dependencias: AWS CodeArtifact de Catcsoft (Repsy queda en el perfil inactivo "repsy") -->
 	<repositories>
 		<repository>
-			<id>repsy</id>
-			<name>Repositorio Maven Privado en Repsy</name>
-			<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
+			<id>catcsoft-ecosystem-catc</id>
+			<name>AWS CodeArtifact Catcsoft (ecosystem-catc)</name>
+			<url>https://catcsoft-803164160062.d.codeartifact.us-east-1.amazonaws.com/maven/ecosystem-catc/</url>
 		</repository>
 	</repositories>
 
-	<!-- Perfiles de distribucion -->
+	<!-- Perfiles de distribucion: CodeArtifact de Catcsoft (por defecto), Repsy (inactivo) y Nexus Centrica -->
 	<profiles>
-		<!-- Perfil para Repsy (repositorio propio) - Activo por defecto -->
+		<!-- Perfil para AWS CodeArtifact de Catcsoft - Activo por defecto -->
 		<profile>
-			<id>repsy</id>
+			<id>codeartifact</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<distributionManagement>
+				<repository>
+					<id>catcsoft-ecosystem-catc</id>
+					<name>catcsoft-ecosystem-catc-releases</name>
+					<url>https://catcsoft-803164160062.d.codeartifact.us-east-1.amazonaws.com/maven/ecosystem-catc/</url>
+				</repository>
+				<snapshotRepository>
+					<id>catcsoft-ecosystem-catc</id>
+					<name>catcsoft-ecosystem-catc-snapshots</name>
+					<url>https://catcsoft-803164160062.d.codeartifact.us-east-1.amazonaws.com/maven/ecosystem-catc/</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<!-- Perfil para Repsy (repositorio anterior) - INACTIVO: activar con -P repsy -->
+		<profile>
+			<id>repsy</id>
 			<distributionManagement>
 				<repository>
 					<id>repsy-catc</id>
@@ -135,6 +151,13 @@
 					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
 				</repository>
 			</distributionManagement>
+			<repositories>
+				<repository>
+					<id>repsy</id>
+					<name>Repositorio Maven Privado en Repsy</name>
+					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
+				</repository>
+			</repositories>
 		</profile>
 
 		<!-- Perfil para Nexus Centrica (soporte de licencia) - Activar con: mvn deploy -P centrica -->
