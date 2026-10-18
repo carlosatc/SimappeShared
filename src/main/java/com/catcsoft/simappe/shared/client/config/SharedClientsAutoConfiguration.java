@@ -24,6 +24,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import com.catcsoft.simappe.shared.client.admin.RolClienteBlockingClient;
 import com.catcsoft.simappe.shared.client.admin.RolClienteReactiveClient;
+import com.catcsoft.simappe.shared.client.configurations.TipoMaestroBlockingClient;
 import com.catcsoft.simappe.shared.client.configurations.UsuarioSimappeBlockingClient;
 import com.catcsoft.simappe.shared.client.configurations.UsuarioSimappeReactiveClient;
 import com.catcsoft.simappe.shared.client.oauth2.ExecutionTokenBlockingClient;
@@ -182,6 +183,19 @@ public class SharedClientsAutoConfiguration {
             havingValue = "true", matchIfMissing = true)
     UsuarioSimappeBlockingClient usuarioSimappeBlockingClient() {
         return blockingProxy(UsuarioSimappeBlockingClient.class);
+    }
+
+    /**
+     * Bean del {@link TipoMaestroBlockingClient} (RestClient). Tipos de maestro generico de simappe-configurations: verifica que un tipo existe y esta activo a partir de su codigo.
+     *
+     * @return el proxy bloqueante
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "simappe.shared.clients.blocking", name = "enabled",
+            havingValue = "true", matchIfMissing = true)
+    TipoMaestroBlockingClient tipoMaestroBlockingClient() {
+        return blockingProxy(TipoMaestroBlockingClient.class);
     }
 
     /**

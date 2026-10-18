@@ -18,6 +18,7 @@ import com.catcsoft.simappe.commons.api.v1.tareas.estado.AvisoControlTareas;
 import com.catcsoft.simappe.commons.api.v1.tareas.estado.NombreUsuarioTareas;
 import com.catcsoft.simappe.commons.api.v1.tareas.tenant.EmisorTokenEjecucion;
 import com.catcsoft.simappe.shared.client.admin.RolClienteReactiveClient;
+import com.catcsoft.simappe.shared.client.configurations.TipoMaestroBlockingClient;
 import com.catcsoft.simappe.shared.client.configurations.UsuarioSimappeBlockingClient;
 import com.catcsoft.simappe.shared.client.oauth2.ExecutionTokenBlockingClient;
 import com.catcsoft.simappe.shared.client.tareas.ControlTareasBlockingClient;
@@ -48,6 +49,7 @@ class SharedClientsAutoConfigurationTest {
                     assertThat(ctx).hasSingleBean(ControlTareasReactiveClient.class);
                     assertThat(ctx).hasSingleBean(ExecutionTokenBlockingClient.class);
                     assertThat(ctx).hasSingleBean(UsuarioSimappeBlockingClient.class);
+                    assertThat(ctx).hasSingleBean(TipoMaestroBlockingClient.class);
                     assertThat(ctx).hasSingleBean(RolClienteReactiveClient.class);
                     assertThat(ctx).doesNotHaveBean(EmisorTokenEjecucion.class);
                 });
