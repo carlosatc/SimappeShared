@@ -111,7 +111,7 @@
 		</plugins>
 	</build>
 
-	<!-- Repositorio para descargar dependencias: AWS CodeArtifact de Catcsoft (Repsy queda en el perfil inactivo "repsy") -->
+	<!-- Repositorio para descargar dependencias: AWS CodeArtifact de Catcsoft -->
 	<repositories>
 		<repository>
 			<id>catcsoft-ecosystem-catc</id>
@@ -120,7 +120,7 @@
 		</repository>
 	</repositories>
 
-	<!-- Perfiles de distribucion: CodeArtifact de Catcsoft (por defecto), Repsy (inactivo) y Nexus Centrica -->
+	<!-- Perfiles de distribucion: CodeArtifact de Catcsoft (por defecto) y Nexus Centrica -->
 	<profiles>
 		<!-- Perfil para AWS CodeArtifact de Catcsoft - Activo por defecto -->
 		<profile>
@@ -140,24 +140,6 @@
 					<url>https://catcsoft-803164160062.d.codeartifact.us-east-1.amazonaws.com/maven/ecosystem-catc/</url>
 				</snapshotRepository>
 			</distributionManagement>
-		</profile>
-		<!-- Perfil para Repsy (repositorio anterior) - INACTIVO: activar con -P repsy -->
-		<profile>
-			<id>repsy</id>
-			<distributionManagement>
-				<repository>
-					<id>repsy-catc</id>
-					<name>Repositorio Maven Privado en Repsy</name>
-					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
-				</repository>
-			</distributionManagement>
-			<repositories>
-				<repository>
-					<id>repsy</id>
-					<name>Repositorio Maven Privado en Repsy</name>
-					<url>https://repo.repsy.io/mvn/catc/simappe-maven</url>
-				</repository>
-			</repositories>
 		</profile>
 
 		<!-- Perfil para Nexus Centrica (soporte de licencia) - Activar con: mvn deploy -P centrica -->
