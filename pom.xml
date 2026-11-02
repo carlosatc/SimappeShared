@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.catcsoft.simappe</groupId>
 	<artifactId>SimappeShared</artifactId>
-	<version>2.6.0</version>
+	<version>3.0.0</version>
 	<name>SimappeShared</name>
 	<description>
 		SimappeShared - Clientes Web y Utilidades Compartidas para Microservicios Simappe
@@ -25,7 +25,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<simappe-model.version>4.7.0</simappe-model.version>
-		<simappe-commons.version>5.14.0</simappe-commons.version>
+		<simappe-commons.version>6.0.0</simappe-commons.version>
 	</properties>
 
 	<dependencies>
@@ -60,10 +60,10 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- SimappeCommons (SuccessResponse + tipos de query; provided: el consumidor ya la trae) -->
+		<!-- SimappeCommons servlet (SuccessResponse, tipos de query y SesionVigente; provided: el consumidor ya la trae) -->
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>
-			<artifactId>SimappeCommons</artifactId>
+			<artifactId>simappe-commons-servlet</artifactId>
 			<version>${simappe-commons.version}</version>
 			<scope>provided</scope>
 		</dependency>
