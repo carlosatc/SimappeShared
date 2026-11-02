@@ -13,12 +13,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
-import com.catcsoft.simappe.shared.identity.client.UserIdentityWebClient;
-import com.catcsoft.simappe.shared.notification.client.EmailNotificationWebClient;
-import com.catcsoft.simappe.shared.registration.client.RegistrationWebClient;
+import com.catcsoft.simappe.shared.identity.client.UserIdentityReactiveClient;
+import com.catcsoft.simappe.shared.notification.client.EmailNotificationReactiveClient;
+import com.catcsoft.simappe.shared.registration.client.RegistrationReactiveClient;
 import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
-import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleWebClient;
-import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityWebClient;
+import com.catcsoft.simappe.shared.tenant.client.TenantCustomerRoleReactiveClient;
+import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityReactiveClient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author Carlos Torres
  * @version 1.0
  * @since 1.1.0
- * @see TenantUserIdentityWebClient
- * @see TenantCustomerRoleWebClient
+ * @see TenantUserIdentityReactiveClient
+ * @see TenantCustomerRoleReactiveClient
  */
 @Slf4j
 @AutoConfiguration
@@ -59,11 +59,11 @@ public class TenantClientsAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    TenantUserIdentityWebClient tenantUserIdentityWebClient(
+    TenantUserIdentityReactiveClient tenantUserIdentityReactiveClient(
             WebClient.Builder webClientBuilder,
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
-        log.info("[SimappeShared] Creando TenantUserIdentityWebClient con baseUrl: {}", baseUrl);
-        return proxy(webClientBuilder, baseUrl, TenantUserIdentityWebClient.class);
+        log.info("[SimappeShared] Creando TenantUserIdentityReactiveClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, TenantUserIdentityReactiveClient.class);
     }
 
     /**
@@ -75,11 +75,11 @@ public class TenantClientsAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    TenantCustomerRoleWebClient tenantCustomerRoleWebClient(
+    TenantCustomerRoleReactiveClient tenantCustomerRoleReactiveClient(
             WebClient.Builder webClientBuilder,
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
-        log.info("[SimappeShared] Creando TenantCustomerRoleWebClient con baseUrl: {}", baseUrl);
-        return proxy(webClientBuilder, baseUrl, TenantCustomerRoleWebClient.class);
+        log.info("[SimappeShared] Creando TenantCustomerRoleReactiveClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, TenantCustomerRoleReactiveClient.class);
     }
 
     /**
@@ -93,11 +93,11 @@ public class TenantClientsAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    EmailNotificationWebClient emailNotificationWebClient(
+    EmailNotificationReactiveClient emailNotificationReactiveClient(
             WebClient.Builder webClientBuilder,
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
-        log.info("[SimappeShared] Creando EmailNotificationWebClient con baseUrl: {}", baseUrl);
-        return proxy(webClientBuilder, baseUrl, EmailNotificationWebClient.class);
+        log.info("[SimappeShared] Creando EmailNotificationReactiveClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, EmailNotificationReactiveClient.class);
     }
 
     /**
@@ -111,11 +111,11 @@ public class TenantClientsAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    RegistrationWebClient registrationWebClient(
+    RegistrationReactiveClient registrationReactiveClient(
             WebClient.Builder webClientBuilder,
             @Value("${simappe.oauth2.url:http://simappe-oauth2-server}") String baseUrl) {
-        log.info("[SimappeShared] Creando RegistrationWebClient con baseUrl: {}", baseUrl);
-        return proxy(webClientBuilder, baseUrl, RegistrationWebClient.class);
+        log.info("[SimappeShared] Creando RegistrationReactiveClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, RegistrationReactiveClient.class);
     }
 
     /**
@@ -128,11 +128,11 @@ public class TenantClientsAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    UserIdentityWebClient userIdentityWebClient(
+    UserIdentityReactiveClient userIdentityReactiveClient(
             WebClient.Builder webClientBuilder,
             @Value("${simappe.admin.url:http://simappe-admin}") String baseUrl) {
-        log.info("[SimappeShared] Creando UserIdentityWebClient con baseUrl: {}", baseUrl);
-        return proxy(webClientBuilder, baseUrl, UserIdentityWebClient.class);
+        log.info("[SimappeShared] Creando UserIdentityReactiveClient con baseUrl: {}", baseUrl);
+        return proxy(webClientBuilder, baseUrl, UserIdentityReactiveClient.class);
     }
 
     /**

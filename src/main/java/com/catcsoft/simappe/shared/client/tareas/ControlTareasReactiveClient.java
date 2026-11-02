@@ -14,7 +14,7 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
+import com.catcsoft.simappe.model.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.tasks.tarea.record.ReconciliacionTareasResponse;
 import com.catcsoft.simappe.model.tasks.tarea.record.SaludTareasResponse;
 

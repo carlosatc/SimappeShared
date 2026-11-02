@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
-import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
+import com.catcsoft.simappe.model.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.configurations.usuario.dto.UsuarioDto;
 
 /**

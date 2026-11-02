@@ -11,21 +11,20 @@
 	</parent>
 	<groupId>com.catcsoft.simappe</groupId>
 	<artifactId>SimappeShared</artifactId>
-	<version>3.0.0</version>
+	<version>4.0.0</version>
 	<name>SimappeShared</name>
 	<description>
-		SimappeShared - Clientes Web y Utilidades Compartidas para Microservicios Simappe
+		SimappeShared - Proxy de los servicios Simappe
 
-		Libreria ligera con clientes HTTP autoconfigurados para comunicacion entre microservicios.
-		Usa Spring Boot AutoConfiguration para zero-config en los consumidores.
-
-		Modulo actual: AI Client (Google Gemini)
+		Interfaces de cliente HTTP (@HttpExchange) de cada servicio Simappe, una de cada tipo:
+		XxxBlockingClient (RestClient) y XxxReactiveClient (WebClient), con sus fabricas
+		autoconfiguradas. Los contratos de datos viven en SimappeModel.
 	</description>
 
 	<properties>
 		<java.version>25</java.version>
-		<simappe-model.version>4.7.0</simappe-model.version>
-		<simappe-commons.version>6.0.0</simappe-commons.version>
+		<simappe-model.version>5.0.0</simappe-model.version>
+		<simappe-commons.version>7.0.0</simappe-commons.version>
 	</properties>
 
 	<dependencies>
@@ -34,9 +33,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
+		<!-- Clientes HTTP: opcionales, cada servicio trae el suyo (RestClient para la variante
+		     bloqueante, WebClient para la reactiva) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-restclient</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webclient</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- Web (RestTemplate) -->
@@ -60,14 +67,22 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- SimappeCommons servlet (SuccessResponse, tipos de query y SesionVigente; provided: el consumidor ya la trae) -->
+		<!-- SimappeCommons core (SimappeConstant, SimappeException; provided: el consumidor ya la trae
+		     por simappe-commons-servlet o simappe-commons-reactive) -->
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>
-			<artifactId>simappe-commons-servlet</artifactId>
+			<artifactId>simappe-commons-core</artifactId>
 			<version>${simappe-commons.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- JPA para ConsecutivoDbGateway (opt-in con simappe.consecutivo.db.enabled); antes llegaba
+		     por simappe-commons-servlet -->
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<!-- SimappeModel (DTOs) -->
 		<dependency>
 			<groupId>com.catcsoft.simappe</groupId>
