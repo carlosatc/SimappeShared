@@ -28,4 +28,5 @@ Ninguno (P-01 y P-02 resueltos por el dueño: D-09 y D-11).
 ## Notas
 
 - La versión depende de SimappeCommons 5.14.0 y SimappeModel 4.7.0 (antes 5.10.0 y 4.6.0).
+- 3.0.0 (rama `feature/commons-modulos`): depende de `simappe-commons-servlet` 6.0.0 (provided) en lugar de `SimappeCommons` 5.14.0. Es MAJOR porque el consumidor debe declarar ese mismo artefacto; el código no cambia.
 - Nada publicado ni desplegado; `mvn install` solo local. No se tocaron versiones 1.x en `~/.m2`.
