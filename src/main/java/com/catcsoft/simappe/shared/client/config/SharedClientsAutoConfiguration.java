@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestClient;
@@ -101,7 +102,8 @@ import com.catcsoft.simappe.shared.tenant.client.TenantUserIdentityReactiveClien
  * <p>Activación opt-in: {@code simappe.shared.clients.enabled=true}. Cada estilo existe si su
  * cliente HTTP está en el classpath y no se apaga por propiedad:</p>
  * <ul>
- *   <li>{@code simappe.shared.clients.blocking.enabled} (por defecto true): RestClient</li>
+ *   <li>{@code simappe.shared.clients.blocking.enabled}: RestClient. Sin la propiedad, existe en una aplicación
+ *   servlet o sin web y no existe en una aplicación web reactiva ({@link BlockingClientsCondition})</li>
  *   <li>{@code simappe.shared.clients.reactive.enabled} (por defecto true): WebClient</li>
  * </ul>
  *
@@ -137,8 +139,7 @@ public class SharedClientsAutoConfiguration {
      */
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(RestClient.class)
-    @ConditionalOnProperty(prefix = "simappe.shared.clients.blocking", name = "enabled",
-            havingValue = "true", matchIfMissing = true)
+    @Conditional(BlockingClientsCondition.class)
     static class BlockingClients {
 
         /** Fábrica de proxies. */

@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 import org.springframework.mock.env.MockEnvironment;
 
 import com.catcsoft.simappe.shared.client.admin.RolClienteReactiveClient;
@@ -70,6 +71,38 @@ class SharedClientsAutoConfigurationTest {
                 "simappe.shared.clients.base-url=http://gateway:8090").run(ctx -> {
                     assertThat(ctx).hasSingleBean(ControlTareasBlockingClient.class);
                     assertThat(ctx).doesNotHaveBean(ControlTareasReactiveClient.class);
+                });
+    }
+
+    @Test
+    void reactiveWebApplicationHasNoBlockingClientsByDefault() {
+        new ReactiveWebApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(SharedClientsAutoConfiguration.class))
+                .withPropertyValues("simappe.shared.clients.enabled=true",
+                        "simappe.shared.clients.base-url=http://gateway:8090")
+                .run(ctx -> {
+                    assertThat(ctx).doesNotHaveBean(ControlTareasBlockingClient.class);
+                    assertThat(ctx).hasSingleBean(ControlTareasReactiveClient.class);
+                });
+    }
+
+    @Test
+    void reactiveWebApplicationCanAskForBlockingClients() {
+        new ReactiveWebApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(SharedClientsAutoConfiguration.class))
+                .withPropertyValues("simappe.shared.clients.enabled=true",
+                        "simappe.shared.clients.blocking.enabled=true",
+                        "simappe.shared.clients.base-url=http://gateway:8090")
+                .run(ctx -> assertThat(ctx).hasSingleBean(ControlTareasBlockingClient.class));
+    }
+
+    @Test
+    void blockingStyleCanBeDisabled() {
+        contexto.withPropertyValues("simappe.shared.clients.enabled=true",
+                "simappe.shared.clients.blocking.enabled=false",
+                "simappe.shared.clients.base-url=http://gateway:8090").run(ctx -> {
+                    assertThat(ctx).doesNotHaveBean(ControlTareasBlockingClient.class);
+                    assertThat(ctx).hasSingleBean(ControlTareasReactiveClient.class);
                 });
     }
 
