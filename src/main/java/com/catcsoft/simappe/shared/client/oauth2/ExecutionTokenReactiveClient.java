@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-import com.catcsoft.simappe.commons.api.v1.core.response.SuccessResponse;
+import com.catcsoft.simappe.model.core.response.SuccessResponse;
 import com.catcsoft.simappe.model.admin.dto.security.SimappeToken;
 import com.catcsoft.simappe.model.admin.dto.security.UserSession;
 import com.catcsoft.simappe.shared.security.ServiceKeyHeader;

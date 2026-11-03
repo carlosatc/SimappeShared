@@ -11,17 +11,11 @@
 # AI Client (Google Gemini via SimappeAdmin)
 com.catcsoft.simappe.shared.ai.config.AiClientAutoConfiguration
 
-# Tenant Clients (self-service del cliente via SimappeAdmin /tenant/**)
-com.catcsoft.simappe.shared.tenant.config.TenantClientsAutoConfiguration
-
-# Clientes compartidos de configuraciones y tareas (usuario, token de ejecucion,
-# control de tareas, roles del cliente) sobre el gateway.
+# Fabrica unica de los clientes de los servicios Simappe (XxxBlockingClient y
+# XxxReactiveClient) sobre simappe.shared.clients.base-url, o la base del
+# destino en simappe.shared.clients.urls.<destino>.
 # Activacion: simappe.shared.clients.enabled=true (opt-in; default apagado)
 com.catcsoft.simappe.shared.client.config.SharedClientsAutoConfiguration
-
-# Piezas del marco de tareas de SimappeCommons sobre esos clientes.
-# Activacion: simappe.tareas.enabled=true (opt-in; default apagado)
-com.catcsoft.simappe.shared.client.config.TareasClientesAutoConfiguration
 
 # Consecutivos en la transaccion del llamante (rutinas configurations.pkg_consecutivo_*).
 # Activacion: simappe.consecutivo.db.enabled=true (opt-in; default apagado)
