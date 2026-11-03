@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
+import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.mock.env.MockEnvironment;
 
 import com.catcsoft.simappe.shared.client.admin.RolClienteReactiveClient;
@@ -122,6 +123,44 @@ class SharedClientsAutoConfigurationTest {
                     assertThat(ctx).hasSingleBean(SimappeAdminBlockingClient.class);
                     assertThat(ctx).doesNotHaveBean(ReactiveClientFactory.class);
                     assertThat(ctx.getBeanNamesForType(ControlTareasReactiveClient.class)).isEmpty();
+                });
+    }
+
+    /**
+     * Servicio web servlet que usa los dos flujos: con WebFlux en el classpath registra los clientes bloqueantes y
+     * los reactivos a la vez, los 35 pares completos.
+     */
+    @Test
+    void servletWebApplicationCanUseBothStyles() {
+        new WebApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(SharedClientsAutoConfiguration.class))
+                .withPropertyValues("simappe.shared.clients.enabled=true",
+                        "simappe.shared.clients.base-url=http://gateway:8090")
+                .run(ctx -> {
+                    assertThat(ctx).hasNotFailed();
+                    assertThat(ctx).hasSingleBean(ControlTareasBlockingClient.class);
+                    assertThat(ctx).hasSingleBean(ControlTareasReactiveClient.class);
+                    long clientes = java.util.Arrays.stream(ctx.getBeanDefinitionNames())
+                            .filter(n -> n.endsWith("BlockingClient") || n.endsWith("ReactiveClient")).count();
+                    assertThat(clientes).isEqualTo(2L * PARES);
+                });
+    }
+
+    /**
+     * Servicio web reactivo que usa los dos flujos: al pedir los bloqueantes quedan los 35 pares completos.
+     */
+    @Test
+    void reactiveWebApplicationCanUseBothStyles() {
+        new ReactiveWebApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(SharedClientsAutoConfiguration.class))
+                .withPropertyValues("simappe.shared.clients.enabled=true",
+                        "simappe.shared.clients.blocking.enabled=true",
+                        "simappe.shared.clients.base-url=http://gateway:8090")
+                .run(ctx -> {
+                    assertThat(ctx).hasNotFailed();
+                    long clientes = java.util.Arrays.stream(ctx.getBeanDefinitionNames())
+                            .filter(n -> n.endsWith("BlockingClient") || n.endsWith("ReactiveClient")).count();
+                    assertThat(clientes).isEqualTo(2L * PARES);
                 });
     }
 
