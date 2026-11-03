@@ -13,8 +13,6 @@ package com.catcsoft.simappe.shared.client.config;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import com.catcsoft.simappe.shared.security.ServiceKeyHeader;
@@ -29,8 +27,11 @@ import lombok.extern.slf4j.Slf4j;
  * ({@code simappe.shared.clients.environment}, por defecto {@code dev}) y la clave de servicio cuando el
  * llamador la pide ({@link ServiceKeyHeader}).</p>
  *
- * <p>Es inmutable: {@link #withRestClient} y {@link #withWebClient} devuelven una copia con el builder de
- * cada estilo. Los builders se clonan por proxy para no dejarle la base ni los filtros a otro cliente.</p>
+ * <p>Es inmutable: {@link #withRestClient} devuelve una copia con el builder de RestClient. El builder se clona
+ * por proxy para no dejarle la base ni los filtros a otro cliente.</p>
+ *
+ * <p>Solo depende de {@code spring-web}, que está en los dos flujos: una aplicación servlet la usa sin WebFlux en
+ * el classpath. Los proxies reactivos los arma {@link ReactiveClientFactory}, que se carga solo si hay WebClient.</p>
  *
  * @author Carlos Torres
  * @since 4.0.0
@@ -50,20 +51,16 @@ public final class ClientFactory {
     /** Builder de RestClient (variante bloqueante); null hasta {@link #withRestClient}. */
     private final RestClient.Builder restClient;
 
-    /** Builder de WebClient (variante reactiva); null hasta {@link #withWebClient}. */
-    private final WebClient.Builder webClient;
-
     /**
      * @param environment propiedades del servicio
      */
     public ClientFactory(Environment environment) {
-        this(environment, null, null);
+        this(environment, null);
     }
 
-    private ClientFactory(Environment environment, RestClient.Builder restClient, WebClient.Builder webClient) {
+    private ClientFactory(Environment environment, RestClient.Builder restClient) {
         this.environment = environment;
         this.restClient = restClient;
-        this.webClient = webClient;
     }
 
     /**
@@ -73,17 +70,7 @@ public final class ClientFactory {
      * @return la copia
      */
     public ClientFactory withRestClient(RestClient.Builder builder) {
-        return new ClientFactory(environment, builder, webClient);
-    }
-
-    /**
-     * Copia de la fábrica que arma proxies reactivos sobre el builder dado.
-     *
-     * @param builder builder de WebClient
-     * @return la copia
-     */
-    public ClientFactory withWebClient(WebClient.Builder builder) {
-        return new ClientFactory(environment, restClient, builder);
+        return new ClientFactory(environment, builder);
     }
 
     /**
@@ -128,32 +115,20 @@ public final class ClientFactory {
     }
 
     /**
-     * Proxy reactivo (WebClient) del cliente sobre su destino.
+     * Nombre del ambiente que va en {@code x-simappe-environment}.
      *
-     * @param <T>     tipo del cliente
-     * @param type    interfaz del cliente
-     * @param target servicio destino
-     * @return el proxy
+     * @return {@code simappe.shared.clients.environment}, por defecto {@code dev}
      */
-    public <T> T reactive(Class<T> type, String target) {
-        if (webClient == null) {
-            throw new IllegalStateException("SimappeShared: fábrica sin WebClient");
-        }
-        String base = base(target);
-        log.debug("SimappeShared: {} (WebClient) base={}", type.getSimpleName(), base);
-        WebClient client = webClient.clone()
-                .baseUrl(base)
-                .defaultHeader(ENVIRONMENT_HEADER, environmentName())
-                .filter(ServiceKeyHeader.webClientFilter(serviceKeyHeaderName()))
-                .build();
-        return HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build().createClient(type);
-    }
-
-    private String environmentName() {
+    String environmentName() {
         return environment.getProperty("simappe.shared.clients.environment", "dev");
     }
 
-    private String serviceKeyHeaderName() {
+    /**
+     * Nombre de la cabecera de la clave de servicio.
+     *
+     * @return el nombre resuelto de {@code simappe.security.service-key-header}
+     */
+    String serviceKeyHeaderName() {
         return environment.resolvePlaceholders(ServiceKeyHeader.VALUE_EXPRESSION);
     }
 }

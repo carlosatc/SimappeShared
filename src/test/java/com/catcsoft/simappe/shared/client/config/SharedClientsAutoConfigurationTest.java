@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 import org.springframework.mock.env.MockEnvironment;
@@ -103,6 +104,24 @@ class SharedClientsAutoConfigurationTest {
                 "simappe.shared.clients.base-url=http://gateway:8090").run(ctx -> {
                     assertThat(ctx).doesNotHaveBean(ControlTareasBlockingClient.class);
                     assertThat(ctx).hasSingleBean(ControlTareasReactiveClient.class);
+                });
+    }
+
+    /**
+     * Flujo servlet sin WebFlux ni Reactor: los clientes bloqueantes se registran y los reactivos no, sin que la
+     * fábrica exija clases de WebFlux.
+     */
+    @Test
+    void servletFlowWithoutWebFluxRegistersOnlyBlockingClients() {
+        contexto.withClassLoader(new FilteredClassLoader("org.springframework.web.reactive", "reactor."))
+                .withPropertyValues("simappe.shared.clients.enabled=true",
+                        "simappe.shared.clients.base-url=http://gateway:8090")
+                .run(ctx -> {
+                    assertThat(ctx).hasNotFailed();
+                    assertThat(ctx).hasSingleBean(ControlTareasBlockingClient.class);
+                    assertThat(ctx).hasSingleBean(SimappeAdminBlockingClient.class);
+                    assertThat(ctx).doesNotHaveBean(ReactiveClientFactory.class);
+                    assertThat(ctx.getBeanNamesForType(ControlTareasReactiveClient.class)).isEmpty();
                 });
     }
 

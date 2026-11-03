@@ -548,15 +548,15 @@ public class SharedClientsAutoConfiguration {
             havingValue = "true", matchIfMissing = true)
     static class ReactiveClients {
 
-        /** Fábrica de proxies. */
-        private final ClientFactory factory;
+        /** Fábrica de proxies reactivos. */
+        private final ReactiveClientFactory factory;
 
         /**
          * @param factory          fábrica de proxies
          * @param webClientBuilder builder de WebClient del contexto, si existe
          */
         ReactiveClients(ClientFactory factory, ObjectProvider<WebClient.Builder> webClientBuilder) {
-            this.factory = factory.withWebClient(webClientBuilder.getIfAvailable(WebClient::builder));
+            this.factory = new ReactiveClientFactory(factory, webClientBuilder.getIfAvailable(WebClient::builder));
         }
 
         /**
