@@ -23,7 +23,7 @@
 
 	<properties>
 		<java.version>25</java.version>
-		<simappe-model.version>5.0.0</simappe-model.version>
+		<simappe-model.version>5.1.0</simappe-model.version>
 		<simappe-commons.version>7.0.0</simappe-commons.version>
 	</properties>
 
