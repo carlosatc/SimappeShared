@@ -13,3 +13,7 @@ com.catcsoft.simappe.shared.ai.config.AiClientAutoConfiguration
 
 # Tenant Clients (self-service del cliente via SimappeAdmin /tenant/**)
 com.catcsoft.simappe.shared.tenant.config.TenantClientsAutoConfiguration
+
+# Unattended tasks (config source on SimappeAdmin + execution token on oauth2).
+# Activa sola con simappe.unattended.service-key o nebula.execution-token.service-key.
+com.catcsoft.simappe.shared.unattended.config.UnattendedClientsAutoConfiguration
