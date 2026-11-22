@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
  * proceso.
  *
  * @author torrescamargo@gmail.com
- * @since 1.4.0
+ * @since 1.5.0
  */
 @HttpExchange("simappe-oauth2-server/api/v1/execution-token")
 public interface ExecutionTokenWebClient {

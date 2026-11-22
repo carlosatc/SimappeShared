@@ -17,7 +17,7 @@ import com.catcsoft.simappe.shared.unattended.client.UnattendedTaskConfigWebClie
  * Fuente de configuración de tareas desatendidas sobre SimappeAdmin.
  *
  * @author torrescamargo@gmail.com
- * @since 1.4.0
+ * @since 1.5.0
  */
 public class AdminUnattendedTaskConfigSource implements UnattendedTaskConfigSource {
 

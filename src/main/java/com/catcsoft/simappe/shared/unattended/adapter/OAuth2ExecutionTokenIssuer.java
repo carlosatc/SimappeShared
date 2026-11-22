@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * token con la clave de servicio. No guarda tokens: cada llamada emite uno.
  *
  * @author torrescamargo@gmail.com
- * @since 1.4.0
+ * @since 1.5.0
  */
 @Slf4j
 public class OAuth2ExecutionTokenIssuer implements ExecutionTokenIssuer {

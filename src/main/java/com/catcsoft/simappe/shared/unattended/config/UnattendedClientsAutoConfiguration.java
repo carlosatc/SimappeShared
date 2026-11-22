@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * </pre>
  *
  * @author torrescamargo@gmail.com
- * @since 1.4.0
+ * @since 1.5.0
  */
 @Slf4j
 @AutoConfiguration
