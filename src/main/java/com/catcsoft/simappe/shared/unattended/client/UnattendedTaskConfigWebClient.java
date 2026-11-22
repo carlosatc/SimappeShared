@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
  * vigencia.
  *
  * @author torrescamargo@gmail.com
- * @since 1.4.0
+ * @since 1.5.0
  */
 @HttpExchange("simappe-admin/api/v1/internal/unattended-task-configs")
 public interface UnattendedTaskConfigWebClient {
