@@ -103,8 +103,16 @@ class UnattendedSharedTest {
         }
 
         @Test
+        void leeElTokenDelSobreEstandarDeExito() throws Exception {
+            when(client.generate(anyString(), anyLong(), any())).thenReturn(Mono.just(JSON.readTree(
+                    "{\"response\":{\"metadata\":{\"apiVersion\":\"v1\"},\"content\":{\"accessToken\":\"sobre\","
+                            + "\"expiresIn\":60000}}}")));
+            assertThat(issuer.issue(fila()).accessToken()).isEqualTo("sobre");
+        }
+
+        @Test
         void respuestaSinTokenEsError() throws Exception {
-            for (String body : new String[] { "{}", "{\"accessToken\":1}", "{\"response\":{}}", "null",
+            for (String body : new String[] { "{}", "{\"accessToken\":1}", "{\"response\":{}}", "{\"response\":{\"content\":{}}}", "null",
                     "{\"accessToken\":\"\"}" }) {
                 when(client.generate(anyString(), anyLong(), any())).thenReturn(Mono.just(JSON.readTree(body)));
                 assertThatThrownBy(() -> issuer.issue(fila())).as(body).isInstanceOf(IllegalStateException.class)

@@ -75,7 +75,8 @@ public class OAuth2ExecutionTokenIssuer implements ExecutionTokenIssuer {
     }
 
     /**
-     * Lee el token de la respuesta, en la raíz o envuelto en {@code response}.
+     * Lee el token de la respuesta: en la raíz, envuelto en {@code response} o en el sobre estándar de éxito
+     * ({@code response.content}), que es como lo entrega el servidor OAuth2 a través de {@code CustomResponseAdvise}.
      *
      * @param body respuesta
      * @return token o {@code null}
@@ -84,12 +85,13 @@ public class OAuth2ExecutionTokenIssuer implements ExecutionTokenIssuer {
         if (body == null || body.isNull()) {
             return null;
         }
-        JsonNode directo = body.get("accessToken");
-        if (directo != null && directo.isTextual()) {
-            return directo.asText();
+        for (JsonNode nodo : List.of(body, body.path("response"), body.path("response").path("content"))) {
+            JsonNode token = nodo.get("accessToken");
+            if (token != null && token.isTextual()) {
+                return token.asText();
+            }
         }
-        JsonNode envuelto = body.path("response").get("accessToken");
-        return envuelto != null && envuelto.isTextual() ? envuelto.asText() : null;
+        return null;
     }
 
     /**
